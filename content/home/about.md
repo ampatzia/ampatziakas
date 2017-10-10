@@ -30,6 +30,6 @@ weight = 5
  
 +++
 
-# Biography
+# About
 
-I'm Stelios Mpatziakas, an aspiring Data Scientist and R Developer, currently residing in Greece. I made this blog to collect interesting stuff around data I occasionaly stumble upon & showcase some of my code in one place. Someday someone will may find something useful in it! 
+I'm Stelios Mpatziakas, an aspiring Data Scientist and R Developer, currently residing in Greece. This  blog was made to collect interesting stuff around data I occasionaly stumble upon & showcase some of my code in one place. Someday someone will may find something useful in it! 
