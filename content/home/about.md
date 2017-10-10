@@ -25,7 +25,7 @@ weight = 5
 
 [[education.courses]]
   course = "BSc in Mathematics"
-  institution = "Massachusetts Institute of Technology"
+  institution = "Aristotle University Thessaloniki"
   year = 2015
  
 +++
