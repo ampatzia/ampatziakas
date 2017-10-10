@@ -1,0 +1,128 @@
+---
+title: Optimal hyperparameter grid search for Corelearn Random Forests
+author: Stelios Mpatziakas
+date: '2017-10-10'
+slug: optimal-hyperparameter-grid-search-for-corelearn-random-forests
+categories:
+  - Rstats
+  - Classification
+tags:
+  - Grid Search
+  - Random Forest
+  - Tuning
+  - CORElearn
+---
+
+  Random Forests is a popular [ensemble learning](https://en.wikipedia.org/wiki/Ensemble_learning) method, introduced in its "current" form by Leo Breiman  in a same-titled [paper](https://link.springer.com/article/10.1023%2FA%3A1010933404324). Random forests can be used for classification or regression and offer "protection" from the overfitting that is sometimes observed in single decision trees.
+
+Random Forest performance can be tuned, tweaking a number of parameters.
+
+
+In this example we will tweak the following three parameters:
+1. The split criterion used to choose the variable that splits the data in best way in every step of tree construction aka estimator
+2. The minimal number of instances that can form a leave of the trees aka Node Weight
+3. The number of trees that will form the ensemble
+
+A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric.
+
+
+#Our tools & Data
+
+
+We will be examining the performance of Random Forests as implemented by package [CORElearn](https://cran.r-project.org/web/packages/CORElearn/index.html), on the titanic passenger list dataset as offered in [rpart.plot package](https://cran.r-project.org/web/packages/rpart.plt). 
+
+![The Sinking of Titanic by Willy Stower, 1912 ](https://upload.wikimedia.org/wikipedia/commons/6/6e/St%C3%B6wer_Titanic.jpg) .
+
+We will be using the caret package for performance metrics,purr for its mapping functions &  ggplot for plotting.
+
+```{r setup, include=FALSE,echo=FALSE}
+library(rpart.plot)
+library(caret)
+library(CORElearn)
+library(dplyr)
+library(purrr)
+library(ggplot2)
+library(ggthemes)
+library(knitr)
+
+```
+
+# Modeling 
+
+We will be using 70% of the data to train the models and the rest 30%, using *caret::
+createDataPartition* that automaticaly handles class balance in the split sets.   We will be trying trying to predict if a passenger survived according to passenger class, her age,sex, number of siblings/spouses  and number of parents/children aboard the ship.
+```{r data_prep, include=FALSE,echo=FALSE}
+set.seed(123)
+
+data(ptitanic)
+
+split_indices<-createDataPartition(ptitanic$survived, p = .7, list = FALSE,times = 1)
+
+train_set <- ptitanic[split_indices, ]
+test_set <- ptitanic[-split_indices, ]
+
+```
+
+We will be using three spliting criteria chosen from the [37 offered](https://www.rdocumentation.org/packages/CORElearn/versions/1.51.2/topics/attrEval) by CORElearn for classification purposes: 
+1. Gini Index
+2. AUC distance between splits. 
+3. Information Gain
+Our minimum leaf membership will be tested from 1 to 5 and we'll be creating ensembles for 10 to 110 trees with a step of 25, as a toy example.
+
+```{r grid_prep}
+grid_search_vars <- list(minNodeWeightRF = seq(1,5,2),
+                         rfNoTrees = seq(10,110,25),estimators= c("Gini","DistAUC", "InfGain")) %>%  purrr::cross_df()
+
+kable(grid_search_vars[1:5,], caption = "First 5 rows of parameter matrix",format = 'markdown') 
+```
+
+
+```{r model}
+
+#Function that accepts the parameters and computes model
+fit_mod<-function(x,y,z){
+  
+  fit.rand.forest = CoreModel(survived~., data=train_set, model="rf", selectionEstimator=z, minNodeWeightRF=x, rfNoTrees=y)
+  
+  return(fit.rand.forest)
+}
+
+#Map values to function: When testing a lot of values this can take a while
+res<-pmap(list(grid_search_vars$minNodeWeightRF,grid_search_vars$rfNoTrees,grid_search_vars$estimators),fit_mod)
+
+
+#Predict for test set and calculate performance metrics
+preds<- lapply(res, function(x) predict(x, newdata=test_set, type="class") ) %>%
+lapply(., function(x) as.data.frame(t(c(confusionMatrix(x,test_set$survived)$overall,                               confusionMatrix(x,test_set$survived)$byClass))))%>%bind_rows()
+```
+
+Best results in terms of Accuracy (82.14%) are produced by an ensemble of 10 trees with a minimum of 5 members per leaf.
+
+```{r bind_res}
+
+df<-bind_cols(grid_search_vars,preds)%>% arrange(desc(Accuracy), rfNoTrees, minNodeWeightRF)
+
+kable(df[1:7,1:10] , caption = "Top 10 results - along with Accuracy Metrics",format = 'markdown') 
+
+```
+
+We can plot the results for a better overview of performance.
+
+```{r plot_res1}
+ggplot(df,aes(x=rfNoTrees,y=Accuracy,colour=estimators))+
+  geom_line()+geom_point()+ geom_hline(aes(yintercept=max(df$Accuracy)), colour="#990000", linetype="dashed")+
+  facet_grid(minNodeWeightRF ~ .)+labs(title="Accuracy of models per Node Weight and Number of Trees")+
+  scale_colour_tableau('tableau10medium')+theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r plot_res2}
+df_top5<-df[1:5,]
+df_top5$id<-paste(df_top5$estimators,"/",df_top5$minNodeWeightRF,"/ ",df_top5$rfNoTrees)
+
+ggplot(df_top5,aes(x=Accuracy,y=id))+
+  geom_segment(aes(x=AccuracyLower, y=id,xend=AccuracyUpper,yend=id),data=df_top5,colour="dodgerblue1")+
+  geom_point(shape=16,colour="dodgerblue4",size=4)+
+  labs(x="Accuracy C.I." , y="Estimator,Leaf size,No of Trees", title = "Accuracy Confidence Intervals for top 5 performing models")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```

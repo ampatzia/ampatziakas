@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.29" />
+  <meta name="author" content="Stelios Batziakas">
+  <meta name="description" content="❤ Data Science">
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+
+
+  
+
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+
+  <link rel="alternate" href="" type="application/rss+xml" title="Stelios Mpatziakas">
+  <link rel="feed" href="" type="application/rss+xml" title="Stelios Mpatziakas">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="/post/optimal-hyperparameter-grid-search-for-corelearn-random-forests/">
+
+  
+
+  <title>Optimal hyperparameter grid search for Corelearn Random Forests | Stelios Mpatziakas</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Stelios Mpatziakas</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#publications_selected">
+            
+            <span>Publications</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Optimal hyperparameter grid search for Corelearn Random Forests</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-10-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Oct 10, 2017
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/rstats">Rstats</a
+    >, 
+    
+    <a href="/categories/classification">Classification</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/grid-search">Grid Search</a
+    >, 
+    
+    <a href="/tags/random-forest">Random Forest</a
+    >, 
+    
+    <a href="/tags/tuning">Tuning</a
+    >, 
+    
+    <a href="/tags/corelearn">CORElearn</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Optimal%20hyperparameter%20grid%20search%20for%20Corelearn%20Random%20Forests&amp;url=%2fpost%2foptimal-hyperparameter-grid-search-for-corelearn-random-forests%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2foptimal-hyperparameter-grid-search-for-corelearn-random-forests%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2foptimal-hyperparameter-grid-search-for-corelearn-random-forests%2f&amp;title=Optimal%20hyperparameter%20grid%20search%20for%20Corelearn%20Random%20Forests"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2foptimal-hyperparameter-grid-search-for-corelearn-random-forests%2f&amp;title=Optimal%20hyperparameter%20grid%20search%20for%20Corelearn%20Random%20Forests"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Optimal%20hyperparameter%20grid%20search%20for%20Corelearn%20Random%20Forests&amp;body=%2fpost%2foptimal-hyperparameter-grid-search-for-corelearn-random-forests%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      <p>Random Forests is a popular <a href="https://en.wikipedia.org/wiki/Ensemble_learning">ensemble learning</a> method, introduced in its “current” form by Leo Breiman in a same-titled <a href="https://link.springer.com/article/10.1023%2FA%3A1010933404324">paper</a>. Random forests can be used for classification or regression and offer “protection” from the overfitting that is sometimes observed in single decision trees.</p>
+<p>Random Forest performance can be tuned, tweaking a number of parameters.</p>
+<p>In this example we will tweak the following three parameters: 1. The split criterion used to choose the variable that splits the data in best way in every step of tree construction aka estimator 2. The minimal number of instances that can form a leave of the trees aka Node Weight 3. The number of trees that will form the ensemble</p>
+<p>A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric.</p>
+<div id="our-tools-data" class="section level1">
+<h1>Our tools &amp; Data</h1>
+<p>We will be examining the performance of Random Forests as implemented by package <a href="https://cran.r-project.org/web/packages/CORElearn/index.html">CORElearn</a>, on the titanic passenger list dataset as offered in <a href="https://cran.r-project.org/web/packages/rpart.plt">rpart.plot package</a>.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/St%C3%B6wer_Titanic.jpg" alt="The Sinking of Titanic by Willy Stower, 1912" /> .</p>
+<p>We will be using the caret package for performance metrics,purr for its mapping functions &amp; ggplot for plotting.</p>
+</div>
+<div id="modeling" class="section level1">
+<h1>Modeling</h1>
+<p>We will be using 70% of the data to train the models and the rest 30%, using <em>caret:: createDataPartition</em> that automaticaly handles class balance in the split sets. We will be trying trying to predict if a passenger survived according to passenger class, her age,sex, number of siblings/spouses and number of parents/children aboard the ship.</p>
+<p>We will be using three spliting criteria chosen from the <a href="https://www.rdocumentation.org/packages/CORElearn/versions/1.51.2/topics/attrEval">37 offered</a> by CORElearn for classification purposes: 1. Gini Index 2. AUC distance between splits. 3. Information Gain Our minimum leaf membership will be tested from 1 to 5 and we’ll be creating ensembles for 10 to 110 trees with a step of 25, as a toy example.</p>
+<pre class="r"><code>grid_search_vars &lt;- list(minNodeWeightRF = seq(1,5,2),
+                         rfNoTrees = seq(10,110,25),estimators= c(&quot;Gini&quot;,&quot;DistAUC&quot;, &quot;InfGain&quot;)) %&gt;%  purrr::cross_df()
+
+kable(grid_search_vars[1:5,], caption = &quot;First 5 rows of parameter matrix&quot;,format = &#39;markdown&#39;) </code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">minNodeWeightRF</th>
+<th align="right">rfNoTrees</th>
+<th align="left">estimators</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="left">Gini</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">10</td>
+<td align="left">Gini</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">10</td>
+<td align="left">Gini</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">35</td>
+<td align="left">Gini</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">35</td>
+<td align="left">Gini</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Function that accepts the parameters and computes model
+fit_mod&lt;-function(x,y,z){
+  
+  fit.rand.forest = CoreModel(survived~., data=train_set, model=&quot;rf&quot;, selectionEstimator=z, minNodeWeightRF=x, rfNoTrees=y)
+  
+  return(fit.rand.forest)
+}
+
+#Map values to function: When testing a lot of values this can take a while
+res&lt;-pmap(list(grid_search_vars$minNodeWeightRF,grid_search_vars$rfNoTrees,grid_search_vars$estimators),fit_mod)
+
+
+#Predict for test set and calculate performance metrics
+preds&lt;- lapply(res, function(x) predict(x, newdata=test_set, type=&quot;class&quot;) ) %&gt;%
+lapply(., function(x) as.data.frame(t(c(confusionMatrix(x,test_set$survived)$overall,                               confusionMatrix(x,test_set$survived)$byClass))))%&gt;%bind_rows()</code></pre>
+<p>Best results in terms of Accuracy (82.14%) are produced by an ensemble of 10 trees with a minimum of 5 members per leaf.</p>
+<pre class="r"><code>df&lt;-bind_cols(grid_search_vars,preds)%&gt;% arrange(desc(Accuracy), rfNoTrees, minNodeWeightRF)
+
+kable(df[1:7,1:10] , caption = &quot;Top 10 results - along with Accuracy Metrics&quot;,format = &#39;markdown&#39;) </code></pre>
+<table>
+<colgroup>
+<col width="12%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="11%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">minNodeWeightRF</th>
+<th align="right">rfNoTrees</th>
+<th align="left">estimators</th>
+<th align="right">Accuracy</th>
+<th align="right">Kappa</th>
+<th align="right">AccuracyLower</th>
+<th align="right">AccuracyUpper</th>
+<th align="right">AccuracyNull</th>
+<th align="right">AccuracyPValue</th>
+<th align="right">McnemarPValue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">10</td>
+<td align="left">InfGain</td>
+<td align="right">0.8214286</td>
+<td align="right">0.6122103</td>
+<td align="right">0.7798538</td>
+<td align="right">0.8580676</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.0231510</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">85</td>
+<td align="left">Gini</td>
+<td align="right">0.8163265</td>
+<td align="right">0.6031942</td>
+<td align="right">0.7743770</td>
+<td align="right">0.8534209</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.0770999</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">85</td>
+<td align="left">InfGain</td>
+<td align="right">0.8137755</td>
+<td align="right">0.5992381</td>
+<td align="right">0.7716426</td>
+<td align="right">0.8510934</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.1601719</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">35</td>
+<td align="left">InfGain</td>
+<td align="right">0.8112245</td>
+<td align="right">0.5963487</td>
+<td align="right">0.7689110</td>
+<td align="right">0.8487631</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.4157977</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">35</td>
+<td align="left">Gini</td>
+<td align="right">0.8112245</td>
+<td align="right">0.5963487</td>
+<td align="right">0.7689110</td>
+<td align="right">0.8487631</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.4157977</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">35</td>
+<td align="left">Gini</td>
+<td align="right">0.8112245</td>
+<td align="right">0.5879077</td>
+<td align="right">0.7689110</td>
+<td align="right">0.8487631</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.0075020</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">35</td>
+<td align="left">DistAUC</td>
+<td align="right">0.8112245</td>
+<td align="right">0.5911141</td>
+<td align="right">0.7689110</td>
+<td align="right">0.8487631</td>
+<td align="right">0.6173469</td>
+<td align="right">0</td>
+<td align="right">0.0481310</td>
+</tr>
+</tbody>
+</table>
+<p>We can plot the results for a better overview of performance.</p>
+<pre class="r"><code>ggplot(df,aes(x=rfNoTrees,y=Accuracy,colour=estimators))+
+  geom_line()+geom_point()+ geom_hline(aes(yintercept=max(df$Accuracy)), colour=&quot;#990000&quot;, linetype=&quot;dashed&quot;)+
+  facet_grid(minNodeWeightRF ~ .)+labs(title=&quot;Accuracy of models per Node Weight and Number of Trees&quot;)+
+  scale_colour_tableau(&#39;tableau10medium&#39;)+theme(plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="/post/2017-10-10-optimal-hyperparameter-grid-search-for-corelearn-random-forests_files/figure-html/plot_res1-1.png" width="672" /></p>
+<pre class="r"><code>df_top5&lt;-df[1:5,]
+df_top5$id&lt;-paste(df_top5$estimators,&quot;/&quot;,df_top5$minNodeWeightRF,&quot;/ &quot;,df_top5$rfNoTrees)
+
+ggplot(df_top5,aes(x=Accuracy,y=id))+
+  geom_segment(aes(x=AccuracyLower, y=id,xend=AccuracyUpper,yend=id),data=df_top5,colour=&quot;dodgerblue1&quot;)+
+  geom_point(shape=16,colour=&quot;dodgerblue4&quot;,size=4)+
+  labs(x=&quot;Accuracy C.I.&quot; , y=&quot;Estimator,Leaf size,No of Trees&quot;, title = &quot;Accuracy Confidence Intervals for top 5 performing models&quot;)+
+  theme(plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="/post/2017-10-10-optimal-hyperparameter-grid-search-for-corelearn-random-forests_files/figure-html/plot_res2-1.png" width="672" /></p>
+</div>
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 Stelios Mpatziakas &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+
