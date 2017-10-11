@@ -9,11 +9,12 @@ categories:
 tags:
   - Grid Search
   - Random Forest
-  - Tuning
+  - Hyperparameter Tuning
   - CORElearn
 ---
 
-  Random Forests is a popular [ensemble learning](https://en.wikipedia.org/wiki/Ensemble_learning) method, introduced in its "current" form by Leo Breiman  in a same-titled [paper](https://link.springer.com/article/10.1023%2FA%3A1010933404324). Random forests can be used for classification or regression and offer "protection" from the overfitting that is sometimes observed in single decision trees.
+This post is the first of a series of posts on model parameter tuning: We will see code to tune Random Forest models with a technique called grid search.
+Random Forests is a popular [ensemble learning](https://en.wikipedia.org/wiki/Ensemble_learning) method, introduced in its "current" form by Leo Breiman  in a same-titled [paper](https://link.springer.com/article/10.1023%2FA%3A1010933404324). Random forests can be used for classification or regression and offer "protection" from the overfitting that is sometimes observed in single decision trees.
 
 Random Forest performance can be tuned, tweaking a number of parameters.
 
@@ -23,7 +24,7 @@ In this example we will tweak the following three parameters:
 2. The minimal number of instances that can form a leave of the trees aka Node Weight
 3. The number of trees that will form the ensemble
 
-A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric.
+A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric. In essence it is a [brute force search](https://en.wikipedia.org/wiki/Brute-force_search) method.
 
 
 #Our tools & Data
