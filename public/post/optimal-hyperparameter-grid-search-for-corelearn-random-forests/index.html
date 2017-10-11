@@ -8,7 +8,7 @@
   <meta name="theme" content="hugo-academic">
   <meta name="generator" content="Hugo 0.29" />
   <meta name="author" content="Stelios Batziakas">
-  <meta name="description" content="❤ Data Science">
+  
 
   
   
@@ -39,8 +39,8 @@
 
   
 
-  <link rel="alternate" href="" type="application/rss+xml" title="Stelios Mpatziakas">
-  <link rel="feed" href="" type="application/rss+xml" title="Stelios Mpatziakas">
+  <link rel="alternate" href="" type="application/rss+xml" title="R,stats &amp; ML">
+  <link rel="feed" href="" type="application/rss+xml" title="R,stats &amp; ML">
 
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
@@ -49,7 +49,7 @@
 
   
 
-  <title>Optimal hyperparameter grid search for Corelearn Random Forests | Stelios Mpatziakas</title>
+  <title>Optimal hyperparameter grid search for Corelearn Random Forests | R,stats &amp; ML</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -66,7 +66,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Stelios Mpatziakas</a>
+      <a class="navbar-brand" href="/">R,stats &amp; ML</a>
     </div>
 
     
@@ -196,7 +196,7 @@
     <a href="/tags/random-forest">Random Forest</a
     >, 
     
-    <a href="/tags/tuning">Tuning</a
+    <a href="/tags/hyperparameter-tuning">Hyperparameter Tuning</a
     >, 
     
     <a href="/tags/corelearn">CORElearn</a
@@ -253,10 +253,10 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      <p>Random Forests is a popular <a href="https://en.wikipedia.org/wiki/Ensemble_learning">ensemble learning</a> method, introduced in its “current” form by Leo Breiman in a same-titled <a href="https://link.springer.com/article/10.1023%2FA%3A1010933404324">paper</a>. Random forests can be used for classification or regression and offer “protection” from the overfitting that is sometimes observed in single decision trees.</p>
+      <p>This post is the first of a series of posts on model parameter tuning: We will see code to tune Random Forest models with a technique called grid search. Random Forests is a popular <a href="https://en.wikipedia.org/wiki/Ensemble_learning">ensemble learning</a> method, introduced in its “current” form by Leo Breiman in a same-titled <a href="https://link.springer.com/article/10.1023%2FA%3A1010933404324">paper</a>. Random forests can be used for classification or regression and offer “protection” from the overfitting that is sometimes observed in single decision trees.</p>
 <p>Random Forest performance can be tuned, tweaking a number of parameters.</p>
 <p>In this example we will tweak the following three parameters: 1. The split criterion used to choose the variable that splits the data in best way in every step of tree construction aka estimator 2. The minimal number of instances that can form a leave of the trees aka Node Weight 3. The number of trees that will form the ensemble</p>
-<p>A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric.</p>
+<p>A typical way to find the optimal values of these parameters is grid search, i.e. specifying a set of possible parameter values, computing all models for them and choosing the best combination according to some performance metric. In essence it is a <a href="https://en.wikipedia.org/wiki/Brute-force_search">brute force search</a> method.</p>
 <div id="our-tools-data" class="section level1">
 <h1>Our tools &amp; Data</h1>
 <p>We will be examining the performance of Random Forests as implemented by package <a href="https://cran.r-project.org/web/packages/CORElearn/index.html">CORElearn</a>, on the titanic passenger list dataset as offered in <a href="https://cran.r-project.org/web/packages/rpart.plt">rpart.plot package</a>.</p>
