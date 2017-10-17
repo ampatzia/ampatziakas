@@ -1,0 +1,62 @@
+---
+title: Interactive_plots
+author: ~
+date: '2017-10-17'
+slug: interactive-plots
+categories:
+  - visualizations
+-Rstats
+tags: 
+  -Plotly
+-Rmarkdown
+-Shiny
+header:
+  caption: ''
+image: ''
+runtime: shiny
+output: html_document
+---
+
+  
+  This is a test to see if & how shiny elements work with blogdown.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(plotly)
+library(dplyr)
+library(MASS)
+#library(shiny)
+```
+
+```{r, echo = FALSE}
+
+
+df1<-Pima.te #Mass provides a test set 
+df2<-Pima.tr2 #And 2 training tests Pima.tr & Pima.tr2: 
+#the first one has only complete cases
+
+df<-bind_rows(df1,df2)
+
+head(df)
+df%>%group_by(type) %>%summarise(.,n=n(),pregnacies=mean(npreg),glucose=mean(glu),
+                                 blood_pressure=mean(bp,na.rm=TRUE),
+                                 skin_thickness=mean(skin,na.rm=TRUE),
+                                 body_mass_index=mean(bmi,na.rm=TRUE),
+                                 diabetes_pedigree=mean(ped),age=mean(age))
+
+selectInput("variable", "Choose Variable:", c("Pregnacies"="npreg","Glucose"="glu","Blood Pressure"="bp","Skin Thickness"="skin","Body Mass Index"="bmi","Diabetes Pedigree Function"="ped","Age"="age"),selected="npreg")
+
+
+activeDataset <- reactive({
+  df<-df[,c('type',input$variable)]
+  
+})
+
+renderPlotly({
+  temp_df<-activeDataset()
+  
+  plot_ly( temp_df,x = ~type, y= ~temp_df[,2], type = "box")%>%
+    layout( yaxis = list(title=colnames(temp_df)[2]))
+})
+```
