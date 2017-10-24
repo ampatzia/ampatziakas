@@ -1,15 +1,6 @@
 +++
-abstract = "Seniors  tend  to  self-track  their  health  in  various 
-ways in their daily life. In fact self-tracking has become a habit of 
-their  daily  lives  and  a  way  of  living.  Therefore,  Quantified
-Self offers  a  great  match  for  this  age  group  in  particular.  Towards 
-this  direction  we  have  been  developing  a  web  application  which 
-visualizes sensor data gathered in real life settings for over a six
-months' period.    Technological    details of the  application 
-developed   are   provided   along   with   the   type   of   visualized 
-information.  Further  work  is  planned  towards  a  user-friendly 
-interface   and  the  pilot  testing  of  the  application  within  the 
-network of established living environments."
+abstract = "Seniors  tend  to  self-track  their  health  in  various ways in their daily life. In fact self-tracking has become a habit of their  daily  lives  and  a  way  of  living.  Therefore,  QuantifiedSelf offers  a  great  match  for  this  age  group  in  particular.  Towards this  direction  we  have  been  developing  a  web  application  which visualizes sensor data gathered in real life settings for over a six months' period.    Technological    details of the  application developed   are   provided   along   with   the   type   of   visualized information.  Further  work  is  planned  towards  a  user-friendly 
+interface and  the  pilot  testing  of  the  application  within  the network of established living environments."
 authors = ["A. Mpilis","S. Mpatziakas", "P. Bamidis"]
 date = "2015-11-01"
 image_preview = ""
