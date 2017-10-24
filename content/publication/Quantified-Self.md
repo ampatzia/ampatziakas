@@ -17,7 +17,7 @@ url_project = ""
 
 # Optional featured image (relative to `static/img/` folder).
 [header]
-image = "aha.jpg"
+image = "qsaplot.jpg"
 caption = ""
 
 +++
